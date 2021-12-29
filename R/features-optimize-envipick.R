@@ -39,4 +39,4 @@ generateFeatureOptPSetEnviPick <- function(...)
                 ppm = TRUE))
 }
 
-getDefFeaturesOptParamRangesEnviPick <- function() list()
+getDefFeaturesOptParamRangesEnviPick <- function() list(minpeak = c(2, Inf))
