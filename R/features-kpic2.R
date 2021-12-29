@@ -78,12 +78,14 @@ setMethod("delete", "featuresKPIC2", function(obj, i = NULL, j = NULL, ...)
 #' @param kmeans If \code{TRUE} then \code{\link[KPIC]{getPIC.kmeans}} is used to
 #'   obtain PICs, otherwise it is \code{\link[KPIC]{getPIC}}.
 #' @param level Passed to \code{\link[KPIC]{getPIC}} or \code{\link[KPIC]{getPIC.kmeans}}
+#' @param PICsplit If \code{TRUE} then \code{\link[KPIC]{PICsplit} is used to split peaks,
+#'    if multiple exist in a mass trace
 #'
 #' @references \insertRef{Ji2017}{patRoon}
 #'
 #' @rdname feature-finding
 #' @export
-findfeaturesKPIC2 <- function(analysisInfo, kmeans = TRUE, level = 1000, ..., parallel = TRUE, verbose = TRUE)
+findfeaturesKPIC2 <- function(analysisInfo, kmeans = TRUE, level = 1000, PICsplit = TRUE, ..., parallel = TRUE, verbose = TRUE)
 {
     # UNDONE: docs
     #   - mention that filter() doesn't alter KPIC object, but IDs can be used to retrace
@@ -111,8 +113,9 @@ findfeaturesKPIC2 <- function(analysisInfo, kmeans = TRUE, level = 1000, ..., pa
         raw <- KPIC::LoadData(inFile)
         pics <- do.call(if (kmeans) KPIC::getPIC.kmeans else KPIC::getPIC,
                         c(list(raw = raw, level = level), ...), verbose)
-        pics <- KPIC::PICsplit(pics) # UNDONE: make optional?
-        pics <- KPIC::getPeaks(pics)
+	if (PICsplit) 
+            pics <- KPIC::PICsplit(pics)
+	pics <- KPIC::getPeaks(pics)
         
         patRoon:::doProgress()
         
